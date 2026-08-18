@@ -2,14 +2,25 @@ import sys, os, shutil, json
 from pathlib import Path
 
 if os.name == "nt":
-	PATH = "C:\\Program Files\\LESB\\"
-	userPATH = str(Path.home() / "LESB") + "\\"
+	PATH = "C:\\Program Files\\lesbbin\\"
+	userPATH = str(Path.home() / ".lesbbin") + "\\"
 else:
-	PATH = "/usr/lesb/"
-	userPATH = str(Path.home() / "LESB") + "/"
+	PATH = "/usr/bin/lesb/"
+	userPATH = str(Path.home() / ".lesbbin") + "/"
 
 def main():
 	argn = 1
+	if not os.path.isdir(PATH):
+		try:
+			os.mkdir(PATH)
+		except:
+			pass
+	if not os.path.isdir(userPATH):
+		try:
+			os.mkdir(userPATH)
+		except:
+			pass
+
 	while argn < len(sys.argv):
 		if sys.argv[argn] == "-y":
 			sys.stdout.write("\033[38;5;1m:: LESB:\033[38;5;9m SYNCING \033[38;5;15mMASTER \033[38;5;13mBULK \033[38;5;5mREPOSITORY\033[0m\n")
@@ -38,7 +49,7 @@ def main():
 			argn += 1
 
 		elif sys.argv[argn] == "-b":
-			sys.stdout.write(f"\033[38;5;1m::\033[0m CLONING BULK: {sys.argv[argn+1]}\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: CLONING BULK: {sys.argv[argn+1]}\n")
 			sys.stdout.flush()
 
 			d = os.getcwd()
@@ -61,7 +72,7 @@ def main():
 			argn += 1
 
 		elif sys.argv[argn] == "-R":
-			sys.stdout.write(f"\033[38;5;1m::\033[0m RUNNING PROGRAM: {sys.argv[argn+1]}\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: RUNNING PROGRAM: {sys.argv[argn+1]}\n")
 			sys.stdout.flush()
 
 			args = f"{PATH}{sys.argv[argn+1]}"
