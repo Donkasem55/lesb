@@ -1,6 +1,13 @@
 import sys, os, shutil, json
 from pathlib import Path
 
+if os.name == "nt":
+	PATH = "C:\\Program Files\\LESB\\"
+	userPATH = str(Path.home() / "LESB") + "\\"
+else:
+	PATH = "/usr/lesb/"
+	userPATH = str(Path.home() / "LESB") + "/"
+
 def main():
 	argn = 1
 	while argn < len(sys.argv):
@@ -47,9 +54,40 @@ def main():
 			if sys.argv[argn+1] not in r:
 				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mBULK \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 				sys.stdout.flush()
+				os.chdir(d)
 				sys.exit(1)
 
 			os.chdir(d)
+			argn += 1
+
+		elif sys.argv[argn] == "-R":
+			sys.stdout.write(f"\033[38;5;1m::\033[0m RUNNING PROGRAM: {sys.argv[argn+1]}\n")
+			sys.stdout.flush()
+
+			args = f"{PATH}{sys.argv[argn+1]}"
+			prog = f"{PATH}{sys.argv[argn+1]}"
+			if not os.path.isfile(args):
+				args = f"{userPATH}{sys.argv[argn+1]}"
+				prog = f"{userPATH}{sys.argv[argn+1]}"
+			for i in range(argn+2, len(sys.argv)):
+				if i.startswith("-"):
+					break
+				else:
+					args += sys.argv[i]
+					args += " "
+
+			d = os.getcwd()
+
+			if os.path.isfile(prog):
+				_ = os.system(args)
+			else:
+				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mPROGRAM \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
+				sys.stdout.flush()
+				os.chdir(d)
+				sys.exit(1)
+			
+			os.chdir(d)
+
 			argn += 1
 
 		else:
