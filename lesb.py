@@ -5,7 +5,7 @@ if os.name == "nt":
 	PATH = "C:\\Program Files\\lesbbin\\"
 	userPATH = str(Path.home() / ".lesbbin") + "\\"
 else:
-	PATH = "/usr/bin/lesb/"
+	PATH = "/opt/lesb/"
 	userPATH = str(Path.home() / ".lesbbin") + "/"
 
 def main():
