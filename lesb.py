@@ -145,7 +145,7 @@ def main():
 							shutil.copytree(f"{p2}/usr/lib/{i}", userPATH)
 
 			elif os.path.isdir(p):
-				sys.stdout.write(f"\033[38;5;1m:: FATAL ERROR:\033[38;5;9m PACKAGE \033[38;5;15mUNSUPPORTED \033[38;5;13mBY PLATFORM \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
+				sys.stdout.write(f"\033[38;5;1m:: FATAL ERROR:\033[38;5;9m PACKAGE \033[38;5;15m'{sys.argv[argn+1]}' \033[38;5;13mUNSUPPORTED \033[38;5;5mBY PLATFORM\033[0m\n")
 				sys.stdout.flush()
 				os.chdir(d)
 				sys.exit(1)
