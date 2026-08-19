@@ -49,7 +49,7 @@ def main():
 			argn += 1
 
 		elif sys.argv[argn] == "-b":
-			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: CLONING BULK: {sys.argv[argn+1]}\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m CLONING\033[38;5;13m BULK: \033[38;5;5m{sys.argv[argn+1]}\033[0m\n")
 			sys.stdout.flush()
 
 			d = os.getcwd()
@@ -62,6 +62,8 @@ def main():
 			with open("masterbulkrepo/repo.json") as f:
 				r = json.load(f)
 
+			os.chdir("bulk")
+
 			if sys.argv[argn+1] not in r:
 				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mBULK \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 				sys.stdout.flush()
@@ -69,10 +71,10 @@ def main():
 				sys.exit(1)
 
 			os.chdir(d)
-			argn += 1
+			argn += 2
 
 		elif sys.argv[argn] == "-R":
-			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: RUNNING PROGRAM: {sys.argv[argn+1]}\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m RUNNING\033[38;5;13m PACKAGE: \033[38;5;5m{sys.argv[argn+1]}\033[0m\n")
 			sys.stdout.flush()
 
 			args = f"{PATH}{sys.argv[argn+1]}"
@@ -81,11 +83,11 @@ def main():
 				args = f"{userPATH}{sys.argv[argn+1]}"
 				prog = f"{userPATH}{sys.argv[argn+1]}"
 			for i in range(argn+2, len(sys.argv)):
-				if i.startswith("-"):
+				if sys.argv[i].startswith("-"):
 					break
 				else:
-					args += sys.argv[i]
 					args += " "
+					args += sys.argv[i]
 
 			d = os.getcwd()
 
@@ -99,6 +101,23 @@ def main():
 			
 			os.chdir(d)
 
+			argn += 1
+			argn += len(args.split(" "))
+
+		elif sys.argv[argn] == "-I":
+			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: INSTALLING PACKAGE: {sys.argv[argn+1]}\n")
+			sys.stdout.flush()
+
+			p = Path.home() / ".lesbcache" / sys.argv[argn+1] / sys.argv[argn+2]
+
+			if os.path.isfile(p):
+				pass
+			else:
+				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mPROGRAM \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
+				sys.stdout.flush()
+				os.chdir(d)
+				sys.exit(1)
+			
 			argn += 1
 
 		else:
