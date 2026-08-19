@@ -49,7 +49,7 @@ def main():
 			argn += 1
 
 		elif sys.argv[argn] == "-b":
-			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m CLONING\033[38;5;13m BULK: \033[38;5;5m{sys.argv[argn+1]}\033[0m\n")
+			sys.stdout.write(f"\033[38;5;1m:: LESB:\033[38;5;9m SYNCING \033[38;5;15mPACKAGE \033[38;5;13mBULK \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 			sys.stdout.flush()
 
 			d = os.getcwd()
@@ -70,11 +70,17 @@ def main():
 				os.chdir(d)
 				sys.exit(1)
 
+			if sys.argv[argn+1] not in os.listdir():
+				os.system(f"git clone {r[sys.argv[argn+1]]}")
+
+			os.chdir(sys.argv[argn+1])
+			os.system("git pull")
+
 			os.chdir(d)
 			argn += 2
 
 		elif sys.argv[argn] == "-R":
-			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m RUNNING\033[38;5;13m PACKAGE: \033[38;5;5m{sys.argv[argn+1]}\033[0m\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m RUNNING\033[38;5;13m PACKAGE: \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 			sys.stdout.flush()
 
 			args = f"{PATH}{sys.argv[argn+1]}"
@@ -105,20 +111,52 @@ def main():
 			argn += len(args.split(" "))
 
 		elif sys.argv[argn] == "-I":
-			sys.stdout.write(f"\033[38;5;1m::\033[0m LESB: INSTALLING PACKAGE: {sys.argv[argn+1]}\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m INSTALLING\033[38;5;13m PACKAGE: \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 			sys.stdout.flush()
 
-			p = Path.home() / ".lesbcache" / sys.argv[argn+1] / sys.argv[argn+2]
+			tmp = sys.argv[argn+1].split(".")
+			p = Path.home() / ".lesbcache" / "bulk" / tmp[0] / ".".join(tmp[1:]) 
+			p2 = Path.home() / ".lesbcache" / "bulk" / tmp[0] / ".".join(tmp[1:]) / sys.platform
 
-			if os.path.isfile(p):
-				pass
+			if os.path.isdir(p) and os.path.isdir(p2):
+				try:
+					for i in os.listdir(f"{p2}/usr/bin"):
+						if os.isfile(f"{p2}/usr/bin/{i}"):
+							shutil.copy(f"{p2}/usr/bin/{i}", PATH)
+						else:
+							shutil.copytree(f"{p2}/usr/bin/{i}", PATH)
+
+					for i in os.listdir(f"{p2}/usr/lib"):
+						if os.isfile(f"{p2}/usr/lib/{i}"):
+							shutil.copy(f"{p2}/usr/lib/{i}", PATH)
+						else:
+							shutil.copytree(f"{p2}/usr/lib/{i}", PATH)
+				except PermissionError:
+					for i in os.listdir(f"{p2}/usr/bin"):
+						if os.isfile(f"{p2}/usr/bin/{i}"):
+							shutil.copy(f"{p2}/usr/bin/{i}", userPATH)
+						else:
+							shutil.copytree(f"{p2}/usr/bin/{i}", userPATH)
+
+					for i in os.listdir(f"{p2}/usr/lib"):
+						if os.isfile(f"{p2}/usr/lib/{i}"):
+							shutil.copy(f"{p2}/usr/lib/{i}", userPATH)
+						else:
+							shutil.copytree(f"{p2}/usr/lib/{i}", userPATH)
+
+			elif os.path.isdir(p):
+				sys.stdout.write(f"\033[38;5;1m:: FATAL ERROR:\033[38;5;9m PACKAGE \033[38;5;15mUNSUPPORTED \033[38;5;13mBY PLATFORM \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
+				sys.stdout.flush()
+				os.chdir(d)
+				sys.exit(1)
+
 			else:
-				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mPROGRAM \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
+				sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mPACKAGE \033[38;5;5m'{sys.argv[argn+1]}'\033[0m\n")
 				sys.stdout.flush()
 				os.chdir(d)
 				sys.exit(1)
 			
-			argn += 1
+			argn += 3
 
 		else:
 			sys.stdout.write(f"\033[38;5;1m:: FATAL\033[38;5;9m ERROR: \033[38;5;15mUNKNOWN \033[38;5;13mARGUMENT: \033[38;5;5m'{sys.argv[argn]}'\033[0m\n")
