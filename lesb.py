@@ -3,10 +3,15 @@ from pathlib import Path
 
 if os.name == "nt":
 	PATH = "C:\\Program Files\\lesbbin\\"
+	PATH = "C:\\Program Files\\lesblib\\"
 	userPATH = str(Path.home() / ".lesbbin") + "\\"
+	userPATHLIB = str(Path.home() / ".lesblib") + "\\"
+
 else:
 	PATH = "/opt/lesb/"
+	PATHLIB = "/opt/lesb.lib/"
 	userPATH = str(Path.home() / ".lesbbin") + "/"
+	userPATHLIB = str(Path.home() / ".lesblib") + "/"
 
 def main():
 	argn = 1
@@ -121,28 +126,49 @@ def main():
 			if os.path.isdir(p) and os.path.isdir(p2):
 				try:
 					for i in os.listdir(f"{p2}/usr/bin"):
+						if os.isfile(f"{PATH}/{i}") 
+							os.remove(f"{PATH}/{i}")
+						elif os.isdir(f"{PATH}/{i}"):
+							shutil.rmtree(f"{PATH}/{i}")
+						
 						if os.isfile(f"{p2}/usr/bin/{i}"):
 							shutil.copy(f"{p2}/usr/bin/{i}", PATH)
 						else:
 							shutil.copytree(f"{p2}/usr/bin/{i}", PATH)
 
 					for i in os.listdir(f"{p2}/usr/lib"):
+						if os.isfile(f"{PATHLIB}/{i}") 
+							os.remove(f"{PATHLIB}/{i}")
+						elif os.isdir(f"{PATHLIB}/{i}"):
+							shutil.rmtree(f"{PATHLIB}/{i}")						
+
 						if os.isfile(f"{p2}/usr/lib/{i}"):
-							shutil.copy(f"{p2}/usr/lib/{i}", PATH)
+							shutil.copy(f"{p2}/usr/lib/{i}", PATHLIB)
 						else:
-							shutil.copytree(f"{p2}/usr/lib/{i}", PATH)
+							shutil.copytree(f"{p2}/usr/lib/{i}", PATHLIB)
+
 				except PermissionError:
 					for i in os.listdir(f"{p2}/usr/bin"):
+						if os.isfile(f"{userPATH}/{i}") 
+							os.remove(f"{userPATH}/{i}")
+						elif os.isdir(f"{userPATH}/{i}"):
+							shutil.rmtree(f"{userPATH}/{i}")
+
 						if os.isfile(f"{p2}/usr/bin/{i}"):
 							shutil.copy(f"{p2}/usr/bin/{i}", userPATH)
 						else:
 							shutil.copytree(f"{p2}/usr/bin/{i}", userPATH)
 
 					for i in os.listdir(f"{p2}/usr/lib"):
+						if os.isfile(f"{userPATHLIB}/{i}") 
+							os.remove(f"{userPATHLIB}/{i}")
+						elif os.isdir(f"{userPATHLIB}/{i}"):
+							shutil.rmtree(f"{userPATHLIB}/{i}")
+
 						if os.isfile(f"{p2}/usr/lib/{i}"):
-							shutil.copy(f"{p2}/usr/lib/{i}", userPATH)
+							shutil.copy(f"{p2}/usr/lib/{i}", userPATHLIB)
 						else:
-							shutil.copytree(f"{p2}/usr/lib/{i}", userPATH)
+							shutil.copytree(f"{p2}/usr/lib/{i}", userPATHLIB)
 
 			elif os.path.isdir(p):
 				sys.stdout.write(f"\033[38;5;1m:: FATAL ERROR:\033[38;5;9m PACKAGE \033[38;5;15m'{sys.argv[argn+1]}' \033[38;5;13mUNSUPPORTED \033[38;5;5mBY PLATFORM\033[0m\n")
