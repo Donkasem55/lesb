@@ -145,7 +145,7 @@ def main():
 			argn += len(args.split(" "))
 
 		elif sys.argv[argn] == "-c":
-			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m CLEARING\033[38;5;13m CACHED: \033[38;5;5mBULKS\033[0m\n")
+			sys.stdout.write(f"\033[38;5;1m::\033[38;5;9m LESB:\033[38;5;15m CLEARING\033[38;5;13m CACHED \033[38;5;5mBULKS\033[0m\n")
 			def onerr(fn, path, _):
 				if os.name == "nt":
 					os.chmod(path, stat.S_IWRITE)
