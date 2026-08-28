@@ -1,21 +1,38 @@
 import sys, os, shutil, json, stat
+import pydatasm as dasm
 from pathlib import Path
 
 if os.name == "nt":
-	PATH = "C:\\Program Files\\lesbbin\\"
-	PATHLIB = "C:\\Program Files\\lesbbin\\"
-	PATHSHR = "C:\\Program Files\\lesbbin\\"
-	userPATH = str(Path.home() / ".lesbbin") + "\\"
-	userPATHLIB = str(Path.home() / ".lesbbin") + "\\"
-	userPATHSHR = str(Path.home() / ".lesbbin") + "\\"
+	SYSTEMCONF = "C:\\etc\\lesb.asm"
 
 else:
-	PATH = "/opt/lesb/"
-	PATHLIB = "/opt/lesb.lib/"
-	PATHSHR = "/usr/share/"
-	userPATH = str(Path.home() / ".lesbbin") + "/"
-	userPATHLIB = str(Path.home() / ".lesblib") + "/"
-	userPATHSHR = str(Path.home() / ".local" / "share") + "/"
+	SYSTEMCONF = "/etc/lesb.asm"
+#	PATH = "/opt/lesb/"
+#	PATHLIB = "/opt/lesb.lib/"
+#	PATHSHR = "/usr/share/"
+#	userPATH = str(Path.home() / ".lesbbin") + "/"
+#	userPATHLIB = str(Path.home() / ".lesblib") + "/"
+#	userPATHSHR = str(Path.home() / ".local" / "share") + "/"
+
+config = dasm.loaddatasm(SYSTEMCONF)
+print(config["path"]["userconfig"])
+try:
+	userconfig = dasm.loaddatasm(os.path.expanduser(config["path"]["userconfig"]))
+except (FileNotFoundError, KeyError):
+	print("LESB: FATAL ERROR: USERCONFIG NOT FOUND")
+	sys.exit(1)
+
+try:
+	PATH = userconfig["path"]["bin"]
+	PATHLIB = userconfig["path"]["lib"]
+	PATHSHR = userconfig["path"]["share"]
+	userPATH = userconfig["userpath"]["bin"]
+	userPATHLIB = userconfig["userpath"]["lib"]
+	userPATHSHR = userconfig["userpath"]["share"]
+
+except KeyError:
+	print("LESB: FATAL ERROR: USERCONFIG: PATH INCOMPLETE")
+	sys.exit(1)
 
 def main():
 	argn = 1
@@ -43,6 +60,9 @@ def main():
 		os.mkdir(userPATHLIB)
 	except:
 		pass
+
+	if len(sys.argv) == 1:
+		print("FATAL ERROR: NO ARGUMENTS GIVEN")
 
 	while argn < len(sys.argv):
 		if sys.argv[argn] == "-y":
