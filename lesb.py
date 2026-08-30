@@ -1,5 +1,11 @@
+#!/usr/bin/python
 import sys, os, shutil, json, stat
+
+if os.name != "nt":
+	sys.path.append("/usr/lib")
+
 import pydatasm as dasm
+
 from pathlib import Path
 
 if os.name == "nt":
